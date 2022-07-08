@@ -11,8 +11,10 @@ class Order extends ConnDB implements Database
     private string $body;
     private int $status;
 
-    public function Set(string $phone_num = "", string $to = "", string $body = "", int $status = 1)
+    function __construct(string $phone_num = "", string $to = "", string $body = "", int $status = 1)
     {
+        parent::__construct();
+
         $this->phone_num = $phone_num;
         $this->to = $to;
         $this->body = $body;
