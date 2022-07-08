@@ -1,7 +1,5 @@
 <?php
 
-use JetBrains\PhpStorm\ArrayShape;
-
 include "ConnDB.php";
 include "Database.php";
 
@@ -21,19 +19,8 @@ class Order extends ConnDB implements Database
         $this->status = $status;
     }
 
-    #[ArrayShape(["phone_num" => "string", "to" => "string", "body" => "string", "status" => "string"])]
-    public function Get(): array
-    {
-        return array(
-            "phone_num" => $this->phone_num,
-            "to" => $this->to,
-            "body" => $this->body,
-            "status" => $this->status,
-        );
-    }
 
-
-    public function Select(): array|string
+    public function Select(): bool|array
     {
         try {
             $arr = [];
@@ -49,25 +36,42 @@ class Order extends ConnDB implements Database
         }
     }
 
-    public function Insert():bool
+    public function Insert(): bool|int
     {
         try {
             $data = array($this->phone_num, $this->to, $this->body, $this->status);
             $exec = $this->getDBH()->prepare("INSERT INTO orders (phone_num, send, body, status) VALUES (?,?,?,?)");
-            return $exec->execute($data);
+            $exec->execute($data);
+            return $exec->rowCount();
         } catch (PDOException $e) {
             echo $e->getMessage();
             return false;
         }
     }
 
-    public function Update()
+    public function Update(): bool|int
     {
-        // TODO: Implement Update() method.
+        try {
+            $data = array($this->phone_num, $this->to, $this->body, $this->status);
+            $exec = $this->getDBH()->prepare("UPDATE orders SET send=?, body=?, status=? WHERE phone_num=?");
+            $exec->execute($data);
+            return $exec->rowCount();
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+            return false;
+        }
     }
 
-    public function Delete()
+    public function Delete(): bool|int
     {
-        // TODO: Implement Delete() method.
+        try {
+            $data = array($this->phone_num);
+            $exec = $this->getDBH()->prepare("DELETE FROM orders WHERE phone_num=?");
+            $exec->execute($data);
+            return $exec->rowCount();
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+            return false;
+        }
     }
 }
