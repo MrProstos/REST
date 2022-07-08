@@ -8,8 +8,7 @@ header("Access-Control-Allow-Methods: DELETE");
 $input = file_get_contents("php://input");
 $inputJSON = json_decode( $input, TRUE );
 
-$db = new Client();
-$db->Set($inputJSON["phone_num"]);
+$db = new Client($inputJSON["phone_num"]);
 $result = $db->Delete();
 if (!$result) {
     echo "not found";

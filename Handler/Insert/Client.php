@@ -9,8 +9,10 @@ header("Access-Control-Allow-Methods: POST");
 $input = file_get_contents("php://input");
 $inputJSON = json_decode( $input, TRUE );
 
-$db = new Client();
-$db->Set($inputJSON["phone_num"],$inputJSON["firstname"],$inputJSON["lastname"],$inputJSON["birthday"]);
-if ($db->Insert()){
-    echo "Successful";
+$db = new Client($inputJSON["phone_num"],$inputJSON["firstname"],$inputJSON["lastname"],$inputJSON["birthday"]);
+$result = $db->Insert();
+if (!$result) {
+    echo "error";
+} else {
+    echo "rows insert ".$result;
 }

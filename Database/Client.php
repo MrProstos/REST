@@ -10,8 +10,10 @@ class Client extends ConnDB implements Database
     private string $lastname;
     private string $birthday;
 
-    public function Set(string $phone_num = "", string $firstname = "", string $lastname = "", string $birthday = "")
+    public function __construct(string $phone_num = "", string $firstname = "", string $lastname = "", string $birthday = "")
     {
+        parent::__construct();
+
         $this->phone_num = $phone_num;
         $this->firstname = $firstname;
         $this->lastname = $lastname;
