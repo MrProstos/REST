@@ -1,7 +1,5 @@
 <?php
 
-use JetBrains\PhpStorm\ArrayShape;
-
 include "ConnDB.php";
 include "Database.php";
 
@@ -21,18 +19,7 @@ class Client extends ConnDB implements Database
     }
 
 
-    #[ArrayShape(["phone_num" => "string", "firstname" => "string", "lastname" => "string", "birthday" => "string"])]
-    public function Get(): array
-    {
-        return array(
-            "phone_num" => $this->phone_num,
-            "firstname" => $this->firstname,
-            "lastname" => $this->lastname,
-            "birthday" => $this->birthday,
-        );
-    }
-
-    public function Select(): array|bool
+    public function Select(): bool|array
     {
         try {
             $arr = [];
@@ -49,24 +36,26 @@ class Client extends ConnDB implements Database
     }
 
 
-    public function Insert(): bool
+    public function Insert(): bool|int
     {
         try {
             $data = array($this->phone_num, $this->firstname, $this->lastname, $this->birthday);
             $exec = $this->getDBH()->prepare("INSERT INTO clients (phone_num, firstname, lastname, birthday) VALUES (?,?,?,?)");
-            return $exec->execute($data);
+            $exec->execute($data);
+            return $exec->rowCount();
         } catch (PDOException $e) {
             echo $e->getMessage();
             return false;
         }
     }
 
-    public function Update():bool
+    public function Update(): bool|int
     {
         try {
-            $data = array($this->firstname, $this->lastname, $this->birthday,$this->phone_num);
+            $data = array($this->firstname, $this->lastname, $this->birthday, $this->phone_num);
             $exec = $this->getDBH()->prepare("UPDATE clients SET firstname=?, lastname=?, birthday=? WHERE phone_num=?");
-            return $exec->execute($data);
+            $exec->execute($data);
+            return $exec->rowCount();
         } catch (PDOException $e) {
             echo $e->getMessage();
             return false;

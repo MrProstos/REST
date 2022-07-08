@@ -20,15 +20,6 @@ class ConnDB
         }
     }
 
-    public function ping()
-    {
-        try {
-            $this->DBH->query('SELECT 1');
-        } catch (PDOException $e) {
-          die ($e->getMessage());
-        }
-    }
-
     public function getDBH(): PDO
     {
         return $this->DBH;
